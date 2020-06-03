@@ -335,6 +335,54 @@ Resources:
       NotificationType: "Complaint"
       MyQueue: !Ref MyQueue
 
+  #Execute Lambda Custom Resource
+  RunLambdaClick:
+    Type: "Custom::RunLambdaFunction"
+    DependsOn: 
+      - "CustomResourceLambdaFunction"
+      - "MySNSTopic"
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - "CustomResourceLambdaFunction"
+          - "Arn"
+      MySNSTopic: !Ref "MySNSTopic"
+      Identity: !Ref "Identity"
+      NotificationType: "Click"
+      MyQueue: !Ref MyQueue      
+  
+  #Execute Lambda Custom Resource
+  RunLambdaOpen:
+    Type: "Custom::RunLambdaFunction"
+    DependsOn: 
+      - "CustomResourceLambdaFunction"
+      - "MySNSTopic"
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - "CustomResourceLambdaFunction"
+          - "Arn"
+      MySNSTopic: !Ref "MySNSTopic"
+      Identity: !Ref "Identity"
+      NotificationType: "Open"
+      MyQueue: !Ref MyQueue
+
+  #Execute Lambda Custom Resource
+  RunLambdaDelivery:
+    Type: "Custom::RunLambdaFunction"
+    DependsOn: 
+      - "CustomResourceLambdaFunction"
+      - "MySNSTopic"
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - "CustomResourceLambdaFunction"
+          - "Arn"
+      MySNSTopic: !Ref "MySNSTopic"
+      Identity: !Ref "Identity"
+      NotificationType: "Delivery"
+      MyQueue: !Ref MyQueue
+
   #CronJob as EventRule to invoke SESReport Lambda Function
   CronjobEvent:
     Type: "AWS::Events::Rule"
@@ -395,7 +443,7 @@ Resources:
 
           def lambda_handler(event, context):
               try:
-                  url = "https://raw.githubusercontent.com/awslabs/aws-support-tools/master/SES/SESReports/sesreport.zip"
+                  url = "https://raw.githubusercontent.com/devopssupportcapestart/ses-dashboard/master/sesreport.zip"
                   download = urllib.URLopener()
                   download.retrieve(url, '/tmp/sesreport.zip')
                   rdata = {}
